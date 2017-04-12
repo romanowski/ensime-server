@@ -14,9 +14,9 @@ object PreventCompilation extends AutoPlugin {
       val res = manipulateBytecode.value
 
       def isIgnored = { // TODO Hoarder#30
-        name.value.startsWith("testing_") || {
-          configuration.value != Compile && (name.value == "testutil" || name.value == "core")
-        }
+        name.value.startsWith("testing_") || // TODO Hoarder#30
+          name.value == "testutil" || // TODO Hoarder#30
+          name.value == "core" // BuildInfo gets generated...
       }
 
       if (res.hasModified && CachedCI.currentSetup.value.shouldUseCache() && !isIgnored)
