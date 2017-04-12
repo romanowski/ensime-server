@@ -12,8 +12,16 @@ object PreventCompilation extends AutoPlugin {
   def perConfig = Seq(
     manipulateBytecode := {
       val res = manipulateBytecode.value
-      if (res.hasModified && CachedCI.currentSetup.value.shouldUseCache())
-        throw new RuntimeException(s"Compilation wasn't no-op after import for ${name.value}")
+
+      def isIgnored = { // TODO Hoarder#30
+        name.value.startsWith("testing_") || {
+          configuration.value != Compile && (name.value == "testutil" || name.value == "core")
+        }
+      }
+
+      if (res.hasModified && CachedCI.currentSetup.value.shouldUseCache() && !isIgnored)
+        throw new RuntimeException(s"Compilation wasn't no-op after import for ${name.value}/${configuration.value}")
+
       res
     }
   )
