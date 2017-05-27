@@ -2,7 +2,8 @@ import sbt._
 import Keys._
 import sbt.plugins.CorePlugin
 import sbt.plugins.JvmPlugin
-import org.romanowski.hoarder.actions.CachedCI
+import org.romanowski.HoarderKeys.cachedCiSetup
+
 
 object PreventCompilation extends AutoPlugin {
 
@@ -19,7 +20,7 @@ object PreventCompilation extends AutoPlugin {
           name.value == "core" // BuildInfo gets generated...
       }
 
-      if (res.hasModified && CachedCI.currentSetup.value.shouldUseCache() && !isIgnored)
+      if (res.hasModified && cachedCiSetup.value.shouldUseCache() && !isIgnored)
         throw new RuntimeException(s"Compilation wasn't no-op after import for ${name.value}/${configuration.value}")
 
       res
