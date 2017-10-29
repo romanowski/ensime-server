@@ -11,7 +11,7 @@ script:
     echo "ensimeServerProjectJars := Nil" >> ensime.sbt ;
   - export JAVA_HOME=$(/usr/libexec/java_home)
   - curl https://raw.githubusercontent.com/paulp/sbt-extras/master/sbt -o sbt ; chmod 755 sbt
-  - ./sbt ++$SCALA_VERSION ";ensimeConfig ;test:compile ;it:compile ;ensime/assembly"
+  - ./sbt ++$SCALA_VERSION ";preBuild ;ensimeConfig ;test:compile ;it:compile ;ensime/assembly; postBuild"
   # This is commented out to speed-up hoarder developmnet
   #- cd testing/cache && ../../sbt ++$SCALA_VERSION ensimeConfig ensimeServerIndex && cd ../..
   #- ./sbt ++$SCALA_VERSION "testOnly -- -l IgnoreOnTravis"
@@ -22,5 +22,6 @@ cache:
   - $HOME/.sbt
   - $HOME/.ivy2
   - $HOME/.coursier
+  - .hoarder-cache
 notifications:
   email: false
